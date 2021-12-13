@@ -1,0 +1,3 @@
+C:\Nodejs\Nodejs_backend\ExpressApp1\ExpressApp1\obj\Debug\ExpressApp1.njsproj.CoreCompileInputs.cache
+C:\Nodejs\Nodejs_backend\ExpressApp1\ExpressApp1\bin\Microsoft.NodejsTools.WebRole.dll
+C:\Nodejs\Nodejs_backend\ExpressApp1\ExpressApp1\obj\Debug\ExpressApp1.njsproj.AssemblyReference.cache
