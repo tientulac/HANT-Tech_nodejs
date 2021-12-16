@@ -2,7 +2,29 @@ module.exports = class {
     constructor(model) {
         this.model = model;
     }
-    findById(id) {
-        return this.model.findById({ _id: id }).leand();
+
+    RfindById(id) {
+        return this.model
+        .findById(
+            { _id: id }
+        ).lean();
+    }
+
+    Rfind() {
+        return this.model
+          .find()
+          .lean();
+    };
+
+    RfindOne(req) {
+        return this.model
+          .findOne(req)
+          .lean();
+    }
+
+    RinsertOne(req) {
+        return this.model
+          .insertOne(req)
+          .lean();
     }
 }

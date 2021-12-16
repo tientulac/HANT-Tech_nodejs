@@ -1,11 +1,41 @@
-var app = require('../app');
+const app = require('../app');
+const response = require('../Models/OutputModels/ResponseBase');
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+//-------------------------------HANDLE ERROR API----------------------//
+module.exports.PrintStacktrace = new class extends Error {
+  async errorNotFound(req, res) {
+    const err = new Error('Not Found');
     err.status = 404;
-    next(err);
-});
+    response.ResponseBase(req, res, err.status, err.message);
+  }
+
+  async errorInternalServer(req, res) {
+    const err = new Error('Error');
+    err.status = 500;
+    response.ResponseBase(req, res, err.status, err.message);
+  }
+
+  async errorBadRequest(req, res) {
+    const err = new Error('Bad Request');
+    err.status = 400;
+    response.ResponseBase(req, res, err.status, err.message);
+  }
+
+  async throwException(req, res, ex) {
+    const err = new Error(ex);
+    return response.ResponseBase(req, res, 500, err.message);
+  }
+}
+
+
+
+//--------------------------------------------------------------------//
+// catch 404 and forward to error handler
+// app.use(function (req, res, next) {
+//     var err = new Error('Not Found');
+//     err.status = 404;
+//     next(err);
+// });
 
 // error handlers
 
