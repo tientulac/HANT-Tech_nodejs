@@ -14,4 +14,10 @@ module.exports = new class extends Repository {
     async RinsertOne(req) {
         return User.create(req).then();
     }
+    async RdeleteOne(id) {
+        return User.findByIdAndRemove(id).lean();
+    }
+    async RupdateOne(id, req) {
+        return User.findByIdAndUpdate(id, { $set: req }).lean();
+    }
 }

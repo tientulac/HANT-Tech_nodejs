@@ -27,4 +27,16 @@ module.exports = class {
           .insertOne(req)
           .lean();
     }
+
+    RdeleteOne(id) {
+        return this.model
+          .deleteOne(id)
+          .lean();
+    }
+
+    RupdateOne(id, req) {
+        return this.model
+          .updateOne(id, req)
+          .lean();
+    }
 }

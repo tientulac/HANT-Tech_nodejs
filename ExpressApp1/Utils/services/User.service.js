@@ -25,4 +25,10 @@ module.exports = new class extends Service {
     async IRegister(req) {
         return UserRepository.RinsertOne(req);
     }
+    async IdeleteOne(id) {
+        return UserRepository.RdeleteOne(id);
+    }
+    async IupdateOne(id, req) {
+        return UserRepository.RupdateOne(id, req);
+    }
 }

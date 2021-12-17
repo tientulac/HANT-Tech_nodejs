@@ -8,4 +8,6 @@ module.exports = class {
   async IdeleteOne(req) { return null; }
   async ILogin(req) { return null; }
   async IRegister(req) { return null; }
+  async IdeleteOne(id) { return null;}
+  async IupdateOne(id, req) { return null; }
 }

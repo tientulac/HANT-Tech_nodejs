@@ -38,31 +38,39 @@ exports.Login = async (req, res) => {
         let RequestUser = {
             UserName: req.body.UserName,
             Password: req.body.Password
-        }
-
+        };
+        let reqUserName = {
+            UserName: req.body.UserName
+        };
         // Check validation
         const { errors, isValid } = validateLogin(RequestUser);
         if (!isValid) {
             response.ResponseBase(req, res, 400, errors);
         }
         else {
-            let isUser = await userService.ILogin(RequestUser);
+            let isUser = await userService.ILogin(reqUserName);
             if (!isUser) {
                 printStacktrace.errorNotFound(req, res);
             }
             else {
-                jwt.sign(RequestUser.UserName, 'secret', (err, token) => {
-                    if (err) {
-                        printStacktrace.errorInternalServer(req, res);
-                    }
-                    else {
-                        let userInfo = {
-                            UserInfo: isUser,
-                            Token: token
-                        };
-                        response.ResponseBase(req, res, res.statusCode, "Đăng nhập thành công !", userInfo);
-                    }
-                })
+                let check = await checkUser(RequestUser.Password, isUser.Password);
+                if (check) {
+                    jwt.sign(RequestUser.UserName, 'secret', (err, token) => {
+                        if (err) {
+                            printStacktrace.errorInternalServer(req, res);
+                        }
+                        else {
+                            let userInfo = {
+                                UserInfo: isUser,
+                                Token: token
+                            };
+                            response.ResponseBase(req, res, res.statusCode, "Đăng nhập thành công !", userInfo);
+                        }
+                    })
+                }
+                else {
+                    printStacktrace.errorBadRequest(req, res);
+                }
             }
         }
     }
@@ -109,19 +117,12 @@ exports.Register = async (req, res) => {
 
 exports.Update = async (req, res) => {
     try {
-        let isUser = await userService.IfindOne({ UserName: req.body.UserName });
-        if (!isUser) {
-            await User.findByIdAndUpdate(req.body.id, { $set: req.body }, async function (err, Data) {
-                if (err) {
-                    printStacktrace.errorBadRequest(req, res);
-                }
-                else {
-                    response.ResponseBase(req, res, res.statusCode, "Cập nhật thành công !", Data);
-                }
-            });
+        const result = await userService.IupdateOne({ _id: req.params.id }, req.body);
+        if (result) {
+            response.ResponseBase(req, res, res.statusCode, "Cập nhật thành công !");
         }
         else {
-            response.ResponseBase(req, res, 400, "Tên tài khoản đã tồn tại !");
+            printStacktrace.errorBadRequest(req, res);
         }
     }
     catch (ex) {
@@ -131,14 +132,13 @@ exports.Update = async (req, res) => {
 
 exports.Delete = async (req, res) => {
     try {
-        await User.findByIdAndRemove(req.params.id, async (err) => {
-            if (err) {
-                printStacktrace.errorBadRequest(req, res);
-            }
-            else {
-                response.ResponseBase(req, res, res.statusCode, "Xóa thành công !")
-            }
-        })
+        const result = await userService.IdeleteOne({ _id: req.params.id });
+        if (result) {
+            response.ResponseBase(req, res, res.statusCode, "Xóa thành công !");
+        }
+        else {
+            printStacktrace.errorBadRequest(req, res);
+        }
     }
     catch (ex) {
         printStacktrace.throwException(req, res, ex);
