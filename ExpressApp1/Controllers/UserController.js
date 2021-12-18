@@ -55,17 +55,22 @@ exports.Login = async (req, res) => {
             else {
                 let check = await checkUser(RequestUser.Password, isUser.Password);
                 if (check) {
-                    jwt.sign(RequestUser.UserName, 'secret', (err, token) => {
-                        if (err) {
-                            printStacktrace.errorInternalServer(req, res);
-                        }
-                        else {
-                            let userInfo = {
-                                UserInfo: isUser,
-                                Token: token
-                            };
-                            response.ResponseBase(req, res, res.statusCode, "Đăng nhập thành công !", userInfo);
-                        }
+                    jwt.sign({
+                        iss: 'Nguyen Ngoc Tien',
+                        sub: isUser, //Thong tin user
+                        iat: new Date().getDate(),
+                        exp: new Date().setDate(new Date().getDate + 3) //Thoi han 3 ngay
+                    }, process.env.JWT_SECRET, (err, token) => {
+                    if (err) {
+                        printStacktrace.errorInternalServer(req, res);
+                    }
+                    else {
+                        let userInfo = {
+                            UserInfo: isUser
+                        };
+                        res.setHeader('Authorization', token);
+                        response.ResponseBase(req, res, res.statusCode, "Đăng nhập thành công !", userInfo);
+                    }
                     })
                 }
                 else {

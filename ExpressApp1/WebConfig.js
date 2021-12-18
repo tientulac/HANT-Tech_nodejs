@@ -1,7 +1,5 @@
 //Chọn môi trường kết nối Database
-const nodeENV = 'developer';
-
-const config = require('./Configs/_' + nodeENV);
+const config = require('./Configs/_' + process.env.NODE_ENV_DEV);
 const mongoose = require('mongoose');
 const db = config.mongoURI;
 
