@@ -7,6 +7,5 @@ router.post('/Login',userController.Login);
 router.post('/Register', userController.Register);
 router.put('/:id', userController.Update);
 router.delete('/:id', userController.Delete);
-
 module.exports = router;
 
